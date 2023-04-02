@@ -47,8 +47,11 @@ impl<P: std::fmt::Debug> Linkedlist<P> {
     } */
 
     pub fn traverse(&self) -> () {
-        let mut current_node = &*self.head.unwrap();
-        while current_node.
+        let mut current_node = &self.head;
+        while let Some(node) = current_node {
+            node.print();
+            current_node = &node.next_node;
+        }
     }
 
     pub fn insert_start(&mut self,new_node_data: P) -> () {
@@ -70,25 +73,28 @@ impl<P: std::fmt::Debug> Linkedlist<P> {
         self.head = Some(Box::new(new_node));
         
     }
-
-    pub fn insert_end(&mut self, new_node_data: P) -> () {
-        let mut new_node = Node { data: new_node_data, next_node: None};
-        self.length += 1;
+    //This function doesn't work.
+    /* pub fn insert_end(&mut self, new_node_data: P) -> () {
+        let mut new_node = Node { 
+            data: new_node_data, 
+            next_node: None
+        };
+        self.length += 1;  
 
         if self.head.is_none() {
             self.head = Some(Box::new(new_node));
-            return;
         } else {
-            let current_node = self.head;
-            while let Some(node_ref) = current_node {
-                let presnode = &*node_ref;
+            let mut current_node = &self.head;
 
+            while current_node.as_ref().unwrap().next_node.is_some() {
+                current_node = &mut current_node.as_mut().unwrap().next_node;
             }
-        }
+
+
+        } */
         
-        let current_node = 
-    }
-}
+} 
+
 
 
 
@@ -106,5 +112,7 @@ mod test{
             hava.insert_start(ty);
         }
         hava.traverse();
+
+        println!("This is the size of the linked list: {}",hava.len());
     }
 }
