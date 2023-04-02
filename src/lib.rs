@@ -1,15 +1,15 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Node<T> {
     pub data: T,
     pub next_node: Option<Box<Node<T>>>,
 }
-
+#[derive(Debug, Clone)]
 pub struct Linkedlist<U>{
     pub head: Option<Box<Node<U>>>,
     pub length: usize,
 }
 
-impl<T> Node<T> {
+impl<T: std::fmt::Debug> Node<T> {
     //Creating a new node.
     pub fn new(data: T) -> Self {
         Self {
@@ -18,10 +18,13 @@ impl<T> Node<T> {
         }  
     }
 
+    pub fn print(&self) -> () {
+        println!("{:?}", self.data);
+    }
+
 }
 
-
-impl<P> Linkedlist<P> {
+impl<P: std::fmt::Debug> Linkedlist<P> {
     
     pub fn new() -> Self {
         Linkedlist { 
@@ -33,8 +36,22 @@ impl<P> Linkedlist<P> {
     pub fn len(&self) -> &usize {
         &self.length
     }
+    //This uses the std::fmt::Debug trait...
+    /* fn traverse(&self) {
+        let mut current_node = &self.head;
+        while let Some(node_ref) = current_node {
+            let node = &**node_ref;
+            println!("{:?}",node.data);
+            current_node = &node.next_node;
+        }
+    } */
 
-    pub fn insert_start(&mut self,new_node_data: P) {
+    pub fn traverse(&self) -> () {
+        let mut current_node = &*self.head.unwrap();
+        while current_node.
+    }
+
+    pub fn insert_start(&mut self,new_node_data: P) -> () {
         let mut new_node = Node { data: new_node_data, next_node: None};
         self.length += 1;
         //if the list is empty the inserted node at the starting will 
@@ -43,7 +60,7 @@ impl<P> Linkedlist<P> {
         //the Linkedlist.head will be kept None,
         //it's box pointer will be stored in the new_node's next_node value
         //and then the new node will be the Linkedlist.head.
-        if self.length == 0 {
+        if self.head.is_none() {
             ()
         } else {
             let current_head = self.head.take().unwrap();
@@ -53,6 +70,24 @@ impl<P> Linkedlist<P> {
         self.head = Some(Box::new(new_node));
         
     }
+
+    pub fn insert_end(&mut self, new_node_data: P) -> () {
+        let mut new_node = Node { data: new_node_data, next_node: None};
+        self.length += 1;
+
+        if self.head.is_none() {
+            self.head = Some(Box::new(new_node));
+            return;
+        } else {
+            let current_node = self.head;
+            while let Some(node_ref) = current_node {
+                let presnode = &*node_ref;
+
+            }
+        }
+        
+        let current_node = 
+    }
 }
 
 
@@ -60,8 +95,16 @@ impl<P> Linkedlist<P> {
 #[cfg(test)]
 
 mod test{
+    use crate::Linkedlist;
+
     #[test]
     fn creating_the_node() {
-        assert_eq!(8, 4*2);
+        let mut hava = Linkedlist::new();
+        hava.insert_start(3);
+        hava.insert_start(6);
+        for ty in 1..45 {
+            hava.insert_start(ty);
+        }
+        hava.traverse();
     }
 }
