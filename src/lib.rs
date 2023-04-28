@@ -1,4 +1,4 @@
-pub mod Data_structures{
+pub mod data_structures{
 
     pub mod linkedlist {
 
@@ -14,13 +14,14 @@ pub mod Data_structures{
         add_element_to_the_end : push_back(data)
         get the reference to the first element : front()
         get the reference to the last element : back()
-        delete_first_element : pop_first()
-        delete_last_element : pop_last()
+        delete_first_element : pop_first() -> head
+        delete_last_element : pop_last() -> tail
         remove the  value from the list : remove(&T) // presently does not exist
         clear the whole list : clear() -> String
+        //maybe printing the whole liked list!!!!
         */
 
-        //----------------------------------------------
+        //---------------------------------------------
         #[derive(Debug, Clone, PartialEq, Eq)]
         pub struct Node<T> {
             pub data: T,
@@ -28,7 +29,7 @@ pub mod Data_structures{
         }
         //---------------------------------------------
         #[derive(Debug, Clone)]
-        pub struct Linkedlist<T>{
+        pub struct Linkedlist<T> {
             pub head: Option<Box<Node<T>>>,
             pub length: usize,
         }
@@ -47,7 +48,7 @@ pub mod Data_structures{
             }
 
         }
-        //-------------------------------------------------
+        //---------------------------------------------
         impl<T: std::fmt::Debug> Linkedlist<T> {
             
             pub fn new() -> Self {
@@ -200,87 +201,65 @@ pub mod Data_structures{
                 }
 
             } 
-            //Remove function does not work
-            /* pub fn remove(&mut self, data: &T) -> bool where T: PartialEq {
 
-                if self.head.is_none() {
-                    // empty list
-                    return false;
-                }
+            pub fn remove(&mut self, data : T) -> Option<T> where T : PartialEq{
 
-                // check if the head node is the one to remove
-                if self.head.as_ref().unwrap().data == *data {
-                    self.head = self.head.as_mut().unwrap().next_node.take();
-                    self.length -= 1;
-                    return true;
-                }
-
-                let mut current_node_ref = &mut self.head;
-                while let Some(node) = current_node_ref.as_mut().map(|node| &mut **node).and_then(|node| node.next_node.as_mut()) {
-                    if node.data == *data {
-                        current_node_ref = &mut node.next_node;
-                        self.length -= 1;
-                        return true;
+                let mut current = &mut self.head;
+                
+                loop {
+                    match current {
+                        None => return None,
+                        Some(node) if node.data == data => {
+                            *current = node.next_node.take();
+                            return Some(data);
+                        },
+                        Some(node) => {
+                            current = &mut node.next_node;
+                        }
                     }
-                    current_node_ref = &mut node.next_node;
                 }
 
-                false
-
-            } */
-
-            //This function doesn't work:/
-            /* pub fn remove(&mut self, data: &T) -> bool where T: PartialEq {
-                // checking for an empty list
-                if self.head.is_none() {
-                    return false;
-                }
-
-                // Check if the head node is the one we want to remove
-                if self.head.as_ref().unwrap().data == *data {
-                    self.head = self.head.as_mut().unwrap().next_node.take();
-                    self.length -= 1;
-                    return true;
-                }
-
-                let mut current_node = self.head.as_mut().unwrap();
-                let mut previous_node = current_node;
-
-                // Traverse the linked list until we find the node to remove
-                while let Some(node) = current_node.next_node.as_mut() {
-                    if node.data == *data {
-                        previous_node.next_node = node.next_node.take();
-                        self.length -= 1;
-                        return true;
-                    }
-                    previous_node = current_node;
-                    current_node = node;
-                } 
-
-                // The node to remove was not found
-                false
-
-            } */
+            }
 
  
-            pub fn clear(&mut self) -> String {
+            pub fn clear(&mut self) {
 
-                let mut return_message = String::new();
                 //Deleting the firt element , creates a chain reaction to delete all the next elements one by one 'cause of no reference.
                 if self.head.is_none() {
-                    return_message = String::from("No items left, to be cleared");
+                    ()
                 } else {
                     let _delete = self.head.take();
-                    return_message = format!("Cleared , {} values" , self.len());
                     self.length = 0;
                 }
 
-                return_message
-                
             }
 
         }
 
+    }
+
+}
+
+
+#[cfg(test)]
+
+mod test{
+    
+    use crate::data_structures::linkedlist::Linkedlist;
+
+    #[test]
+    fn Linkedlist() {
+
+        let mut tester: Linkedlist<u32> = Linkedlist::new();
+
+        for yt in 13..19 {
+            tester.push_front(yt);
+        }
+
+        tester.remove(15);
+
+        tester.traverse();
+        
     }
 
 }
